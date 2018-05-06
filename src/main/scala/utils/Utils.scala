@@ -2,11 +2,13 @@ package utils
 
 import java.util
 import java.text.SimpleDateFormat
-import java.util.Locale
+import java.util.{Locale, UUID}
 import java.util.regex.Pattern
+
 import scala.collection.JavaConversions.mapAsScalaMap
 import net.minidev.json.JSONObject
 import net.minidev.json.parser.JSONParser
+
 import scala.collection.mutable
 
 
@@ -91,5 +93,13 @@ object Utils {
     date.getTime
   }
 
-
+  /**
+    * 生成随机的机器数字    1:1c5caad3-63f7-4e31-abee-1f0bcb188f91
+    */
+  def getUUID()={
+    var  uuid=UUID.randomUUID()
+   var str = uuid.toString
+    var uuidStr=str.replace("-", "")
+  uuidStr
+  }
 }

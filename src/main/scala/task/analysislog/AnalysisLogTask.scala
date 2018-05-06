@@ -4,6 +4,8 @@ import caseclass.IPRule
 import common.{EventLogCountans, GlobalCountans}
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.{FileSystem, Path}
+import org.apache.hadoop.hbase.client.Put
+import org.apache.hadoop.hbase.io.ImmutableBytesWritable
 import org.apache.hadoop.hbase.mapred.TableOutputFormat
 import org.apache.hadoop.mapred.JobConf
 import org.apache.spark.{SparkConf, SparkContext, SparkException}
@@ -96,6 +98,35 @@ object AnalysisLogTask {
       */
     val eventLogMap = sc.textFile(sparkConf.get(GlobalCountans.TASK_INPUT_PATH)).map(logText => {
       LogAnalysisUtils.analysisLog(logText, ipRulesBroadCast.value)
-    }).filter(x=>x!=null).foreach(println)
-  }
+    }).filter(x=>x!=null)
+
+    val tuple2RDD = eventLogMap.map(map => {
+      /**
+        * 构建rowkey原则：
+        * 1，唯一性 2，散列 3，长度不能过长，4，方便查询
+        *
+        * access_time+"_"+ (uuid+enventName).hashcode
+        */
+      //用户访问时间
+      val accessTime = map(EventLogCountans.LOG_COLUMN_NAME_ACCESS_TIME)
+      //用户唯一标识
+      val uuid = Utils.getUUID()
+      //ip
+      val ip = map(EventLogCountans.LOG_COLUMN_NAME_IP)
+      //构建rowkey
+      val rowKey = accessTime + "_" + Math.abs((uuid + ip).hashCode)
+      //构建put对象
+      val put = new Put(rowKey.getBytes())
+      map.foreach(t2 => {
+        put.addColumn(EventLogCountans.HBASE_EVENT_LOG_TABLE_FAMILY.getBytes(), t2._1.getBytes(), t2._2.getBytes())
+      })
+      //保存到hbase中的数据一定要是对偶元组格式的
+      (new ImmutableBytesWritable(), put)
+    })
+    //将结果保存到hbase中      create 'event_log','log'
+    tuple2RDD.saveAsHadoopDataset(jobConf)
+    sc.stop()
+ }
+
+
 }

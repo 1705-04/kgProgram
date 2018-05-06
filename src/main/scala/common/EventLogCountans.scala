@@ -85,7 +85,8 @@ object EventLogCountans {
     */
   final val LOG_COLUMN_NAME_OS_N= "os_n"
   /**
-    * ktingToken
+    * ktingToken（去除）
     */
   final val LOG_COLUMN_NAME_KTING_TOKEN= "ktingToken"
+
 }
