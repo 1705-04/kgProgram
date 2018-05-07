@@ -3,18 +3,18 @@
 <configuration>
     <property>
         <name>fs.defaultFS</name>
-        <value>hdfs://thq1:9000</value>
+        <value>hdfs://z1:8020</value>
     </property>
     <property>
         <name>hbase.zookeeper.quorum</name>
-        <value>thq1,thq2,thq3</value>
+        <value>z1,z2,z3</value>
     </property>
 
 
     <!--TODO Kafka配置-->
     <property>
         <name>metadata.broker.list</name>
-        <value>thq1:9092,thq2:9092,thq3:9092</value>
+        <value>z1:9092,z2:9092,z3:9092</value>
     </property>
     <property>
         <name>kafka.topic</name>
@@ -50,7 +50,7 @@
     </property>
     <property>
         <name>jdbc.url</name>
-        <value>jdbc:mysql://192.168.134.211/bi?characterEncoding=utf-8</value>
+        <value>jdbc:mysql://192.168.222.1/bi?characterEncoding=utf-8</value>
     </property>
     <property>
         <name>jdbc.user</name>
@@ -58,7 +58,7 @@
     </property>
     <property>
         <name>jdbc.password</name>
-        <value>123</value>
+        <value>root</value>
     </property>
 
 

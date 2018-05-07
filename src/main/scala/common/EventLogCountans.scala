@@ -19,7 +19,7 @@ object EventLogCountans {
   /**
     * 保存日志的表
     */
-  final val HBASE_EVENT_LOG_TABLE: String = "kugou_music"
+  final val HBASE_EVENT_LOG_TABLE: String = "kugou_musicc"
   /**
     * 列族
     */

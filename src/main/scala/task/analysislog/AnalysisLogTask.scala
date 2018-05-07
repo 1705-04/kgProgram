@@ -86,10 +86,10 @@ object AnalysisLogTask {
       * 1，触发任务的提交
       * 2，将executor上的任务处理结果，拉回到driver
       */
-    val ipRules: Array[IPRule] = sc.textFile("/home/ip.data").map(line => {
+    val ipRules: Array[IPRule] = sc.textFile("/mr/input/ip.data").map(line => {
       val fields = line.split("\\|")
       IPRule(fields(2).toLong, fields(3).toLong, fields(5), fields(6), fields(7))
-    }).collect()
+    }).collect().take(1000)
 
     val ipRulesBroadCast = sc.broadcast(ipRules)
     //加载hdfs上的日志
